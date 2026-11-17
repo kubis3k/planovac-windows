@@ -1,0 +1,45 @@
+{
+  "name": "planovac",
+  "productName": "Plánovač",
+  "version": "1.0.0",
+  "description": "Plánovač – týmový kalendář Globaal Elevate",
+  "author": "Globaal Elevate Production s.r.o.",
+  "main": "main.js",
+  "scripts": {
+    "dist": "electron-builder --win nsis --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "45.2.0",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.globaalelevate.planovac",
+    "productName": "Planovac",
+    "executableName": "Planovac",
+    "files": [
+      "main.js",
+      "icon.png",
+      "tray.png"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "icon.png"
+    },
+    "compression": "maximum",
+    "electronLanguages": [
+      "cs",
+      "en-US"
+    ],
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Plánovač",
+      "artifactName": "Planovac-Setup.${ext}"
+    }
+  }
+}

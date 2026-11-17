@@ -1,0 +1,37 @@
+# Sestaví Windows instalátor a přiloží ho k vydání (release).
+# Nová verze: zvyš "version" v package.json a na GitHubu vytvoř Release (tag např. v1.0.1).
+name: Windows build
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Ikony z webu kalendáře
+        shell: bash
+        run: |
+          curl -fsSL https://kalendar.globaalelevate.com/icon-512.png -o icon.png
+          curl -fsSL https://kalendar.globaalelevate.com/icon-192.png -o tray.png
+      - run: npm install --no-audit --no-fund
+      - run: npm run dist
+      - name: Přiložit instalátor k vydání
+        if: github.event_name == 'release'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" dist/Planovac-Setup.exe --clobber
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Planovac-Setup
+          path: dist/Planovac-Setup.exe
